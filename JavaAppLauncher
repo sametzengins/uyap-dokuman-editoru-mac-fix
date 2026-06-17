@@ -1,0 +1,64 @@
+#!/bin/bash
+#
+# Uyap Doküman Editörü - shell launcher
+# https://github.com/<KULLANICI>/uyap-dokuman-editoru-mac-fix
+#
+# Eski Oracle appbundler native launcher'ının yerini alır. O launcher
+# JVM'i ikincil bir thread'de çalıştırıp main() döner dönmez JVM'i yok
+# ettiği için (Apple Silicon / modern macOS'ta race condition) editör
+# penceresi açılmadan kapanıyordu. Bu betik standart `java` komutunu
+# kullanır; AWT olay döngüsü düzgün yaşar ve pencere açık kalır.
+#
+# Gerekli JRE uygulamanın içine gömülüdür (Contents/PlugIns).
+
+set -u
+
+# --- Uygulama kök dizinini çöz (sembolik bağları izleyerek) ---
+SELF="$0"
+while [ -h "$SELF" ]; do
+  LINK="$(readlink "$SELF")"
+  case "$LINK" in
+    /*) SELF="$LINK" ;;
+    *)  SELF="$(dirname "$SELF")/$LINK" ;;
+  esac
+done
+MACOS_DIR="$(cd "$(dirname "$SELF")" >/dev/null 2>&1 && pwd)"
+APP_ROOT="$(cd "$MACOS_DIR/../.." >/dev/null 2>&1 && pwd)"
+
+# --- Gömülü JRE'yi bul (PlugIns altındaki ilk runtime) ---
+JRE_HOME=""
+for d in "$APP_ROOT"/Contents/PlugIns/*/Contents/Home; do
+  [ -d "$d" ] && JRE_HOME="$d" && break
+done
+if [ -z "$JRE_HOME" ]; then
+  osascript -e 'display alert "Java bulunamadı" message "Uygulamanın içinde gömülü JRE yok (Contents/PlugIns)."' >/dev/null 2>&1
+  exit 1
+fi
+
+JAVA_BIN="$JRE_HOME/jre/bin/java"        # Java 8 yapısı
+[ -x "$JAVA_BIN" ] || JAVA_BIN="$JRE_HOME/bin/java"   # Java 9+ yapısı
+
+JAR="$APP_ROOT/Contents/Java/editor-app.jar"
+SPLASH="$APP_ROOT/Contents/Java/dokuman_editor_splash_screen_animated.gif"
+ICON="$APP_ROOT/Contents/Resources/uyap_ki_icon.ico.icns"
+MAIN_CLASS="tr.com.havelsan.uyap.system.editor.common.WPAppManager"
+
+SPLASH_OPT=()
+[ -f "$SPLASH" ] && SPLASH_OPT=(-splash:"$SPLASH")
+ICON_OPT=()
+[ -f "$ICON" ] && ICON_OPT=(-Xdock:icon="$ICON")
+
+cd "$APP_ROOT/Contents/Java" 2>/dev/null || true
+
+exec "$JAVA_BIN" \
+  "${SPLASH_OPT[@]}" \
+  -Xms512M -Xmx4096M \
+  -Dsun.java2d.dpiaware=false \
+  -Dsun.java2d.uiScale=1 \
+  -Dapple.laf.useScreenMenuBar=true \
+  -Xdock:name="Uyap Doküman Editörü" \
+  "${ICON_OPT[@]}" \
+  -cp "$JAR" \
+  "$MAIN_CLASS" \
+  getNewWPInstance EDITOR_TYPE_DOCUMENT \
+  "$@"
