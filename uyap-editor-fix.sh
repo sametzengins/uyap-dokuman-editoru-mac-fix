@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # UYAP Doküman Editörü - macOS (Apple Silicon) "Unable to load Java" düzeltmesi
-# https://github.com/<KULLANICI>/uyap-dokuman-editoru-mac-fix
+# https://github.com/sametzengins/uyap-dokuman-editoru-mac-fix
 #
 # Kullanım:
 #   ./uyap-editor-fix.sh "/Applications/Uyap Doküman Editörü.app"

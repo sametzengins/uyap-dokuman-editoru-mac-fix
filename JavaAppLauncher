@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # Uyap Doküman Editörü - shell launcher
-# https://github.com/<KULLANICI>/uyap-dokuman-editoru-mac-fix
+# https://github.com/sametzengins/uyap-dokuman-editoru-mac-fix
 #
 # Eski Oracle appbundler native launcher'ının yerini alır. O launcher
 # JVM'i ikincil bir thread'de çalıştırıp main() döner dönmez JVM'i yok

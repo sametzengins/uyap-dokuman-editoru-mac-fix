@@ -42,13 +42,31 @@ Bu depodaki [`JavaAppLauncher`](JavaAppLauncher) dosyası, uygulamanın içine k
 
 ---
 
+## ⬇️ İndir (yeni dosyalar)
+
+- **Yeni başlatıcı:** [`JavaAppLauncher`](JavaAppLauncher)
+  → ham dosya: https://raw.githubusercontent.com/sametzengins/uyap-dokuman-editoru-mac-fix/master/JavaAppLauncher
+- **Otomatik düzeltme scripti:** [`uyap-editor-fix.sh`](uyap-editor-fix.sh)
+  → ham dosya: https://raw.githubusercontent.com/sametzengins/uyap-dokuman-editoru-mac-fix/master/uyap-editor-fix.sh
+
+Tek komutla indirip çalıştırma:
+
+```bash
+curl -fsSLO https://raw.githubusercontent.com/sametzengins/uyap-dokuman-editoru-mac-fix/master/uyap-editor-fix.sh
+curl -fsSLO https://raw.githubusercontent.com/sametzengins/uyap-dokuman-editoru-mac-fix/master/JavaAppLauncher
+chmod +x uyap-editor-fix.sh
+./uyap-editor-fix.sh "/Applications/Uyap Doküman Editörü.app"
+```
+
+---
+
 ## 🚀 Otomatik kurulum (önerilen)
 
 [`uyap-editor-fix.sh`](uyap-editor-fix.sh) scripti tüm adımları sizin için yapar.
 
 ```bash
 # 1) Bu depoyu indirin
-git clone https://github.com/<KULLANICI>/uyap-dokuman-editoru-mac-fix.git
+git clone https://github.com/sametzengins/uyap-dokuman-editoru-mac-fix.git
 cd uyap-dokuman-editoru-mac-fix
 
 # 2) Scripti uygulamanızın yolu ile çalıştırın
